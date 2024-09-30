@@ -10,22 +10,21 @@ public class RegistrationFormTests extends TestBase {
 
     RegistrationPage registrationPage = new RegistrationPage();
 
+    String name = "User";
+    String lastName = "Testov";
+    String email = "test@email.com";
+    String mobile = "7999999999";
+    String subject = "Computer";
+    String address = "Default city 2 Pushkin's Street";
+    String state = "Haryana";
+    String city = "Karnal";
+    String gender = "Female";
+    String hobby = "Reading";
+    String date = "26 April,1992";
+    String picName = "pic.jpg";
+
     @Test
     void fillRegistrationFormTest() {
-        //arrange
-        String name = "User";
-        String lastName = "Testov";
-        String email = "test@email.com";
-        String mobile = "7999999999";
-        String subject = "Computer";
-        String address = "Default city 2 Pushkin's Street";
-        String state = "Haryana";
-        String city = "Karnal";
-        String gender = "Female";
-        String hobby = "Reading";
-        String date = "26 April,1992";
-        String picName = "pic.jpg";
-
         //act
         registrationPage.openPage()
                 .setFirstName(name)
@@ -40,7 +39,7 @@ public class RegistrationFormTests extends TestBase {
                 .setAddress(address)
                 .setState(state)
                 .setCity(city)
-                .submitCityAndState();
+                .submit();
 
         //asserts
         registrationPage
@@ -55,5 +54,35 @@ public class RegistrationFormTests extends TestBase {
                 .checkResult("Address", address)
                 .checkResult("State and City", state + " " + city);
     }
-    //Добавить автотест с минимальными данными    //Проверка негативных значений
+
+    //Проверка минимального количества введнных данных
+    @Test
+    public void minimalNumbersOfValuesTest() {
+        //act
+        registrationPage.openPage()
+                .setFirstName(name)
+                .setLastName(lastName)
+                .setGender(gender)
+                .setUserNumber(mobile)
+                .submit();
+        //assert
+        registrationPage
+                .checkResult("Student Name", name + " " + lastName)
+                .checkResult("Gender", gender)
+                .checkResult("Mobile", mobile);
+    }
+
+    //Попытка регистрации без заполнения фамилии
+    @Test
+    public void registrationWithoutLastname() {
+        //act
+        registrationPage.openPage()
+                .setFirstName(name)
+                .setGender(gender)
+                .setUserNumber(mobile)
+                .submit();
+
+        //assert
+        registrationPage.checkUnsuccessfulValidation();
+    }
 }

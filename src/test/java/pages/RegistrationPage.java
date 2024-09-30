@@ -1,6 +1,9 @@
 package pages;
 import com.codeborne.selenide.SelenideElement;
 import pages.components.CalendarComponent;
+import pages.components.ResultsTable;
+
+import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -21,7 +24,8 @@ public class RegistrationPage {
             stateInput = $("#stateCity-wrapper"),
             cityTabs = $("#city"),
             cityInput = $("#stateCity-wrapper"),
-            submitBtnCityAndState = $("#submit");
+            submitBtn = $("#submit"),
+            userForm = $("form#userForm");
 
     CalendarComponent calendarComponent = new CalendarComponent();
 
@@ -58,8 +62,7 @@ public class RegistrationPage {
         return this;
     }
     public RegistrationPage checkResult(String key, String value) {
-        $(".table-responsive").$(byText(key)).parent()
-                .shouldHave((text(value)));
+        new ResultsTable().checkResult(key, value);
         return this;
     }
 
@@ -97,8 +100,13 @@ public class RegistrationPage {
         return this;
     }
 
-    public RegistrationPage submitCityAndState() {
-        submitBtnCityAndState.click();
+    public RegistrationPage submit() {
+        submitBtn.click();
+        return this;
+    }
+
+    public RegistrationPage checkUnsuccessfulValidation() {
+        userForm.shouldHave(attribute("class", "was-validated"));
         return this;
     }
 
