@@ -1,0 +1,59 @@
+package tests;
+import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;import pages.RegistrationPage;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.*;
+
+public class RegistrationFormTests extends TestBase {
+
+    RegistrationPage registrationPage = new RegistrationPage();
+
+    @Test
+    void fillRegistrationFormTest() {
+        //arrange
+        String name = "User";
+        String lastName = "Testov";
+        String email = "test@email.com";
+        String mobile = "7999999999";
+        String subject = "Computer";
+        String address = "Default city 2 Pushkin's Street";
+        String state = "Haryana";
+        String city = "Karnal";
+        String gender = "Female";
+        String hobby = "Reading";
+        String date = "26 April,1992";
+        String picName = "pic.jpg";
+
+        //act
+        registrationPage.openPage()
+                .setFirstName(name)
+                .setLastName(lastName)
+                .setEmail(email)
+                .setGender(gender)
+                .setUserNumber(mobile)
+                .setDateOfBirth("26", "April", "1992")
+                .setSubject(subject)
+                .setHobby(hobby)
+                .uploadImage("images/pic.jpg")
+                .setAddress(address)
+                .setState(state)
+                .setCity(city)
+                .submitCityAndState();
+
+        //asserts
+        registrationPage
+                .checkResult("Student Name", name + " " + lastName)
+                .checkResult("Student Email", email)
+                .checkResult("Gender", gender)
+                .checkResult("Mobile", mobile)
+                .checkResult("Date of Birth", date)
+                .checkResult("Subjects", subject)
+                .checkResult("Hobbies", hobby)
+                .checkResult("Picture", picName)
+                .checkResult("Address", address)
+                .checkResult("State and City", state + " " + city);
+    }
+    //Добавить автотест с минимальными данными    //Проверка негативных значений
+}
